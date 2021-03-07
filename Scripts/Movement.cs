@@ -8,7 +8,6 @@ public class Movement : MonoBehaviour {
     [SerializeField] ParticleSystem mainThrusters;
     [SerializeField] ParticleSystem leftSideThruster;
     [SerializeField] ParticleSystem rightSideThruster;
-
     
     AudioSource audioSource;
     Rigidbody rBody;
@@ -30,40 +29,62 @@ public class Movement : MonoBehaviour {
 
     void ProcessThrust() {
         if (Input.GetKey(KeyCode.Space)) {
-            rBody.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
-            if(!audioSource.isPlaying) {
-                audioSource.PlayOneShot(mainEngine);
-            }
-            if(!mainThrusters.isPlaying) {
-                mainThrusters.Play();
-            }
+            applyThrust();
         }
         else {
-            audioSource.Stop();
-            mainThrusters.Stop();
+            killThrust();
         }
     }
+
     void ProcessRotation() {
-        if (Input.GetKey(KeyCode.LeftArrow)) {
-            ApplyRotation(rotationThrust);
-            if(!rightSideThruster.isPlaying) {
-                rightSideThruster.Play();
-            }
+        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A)) {
+            RotateLeft();
         }
-        else if (Input.GetKey(KeyCode.RightArrow)) {
-            ApplyRotation(-rotationThrust);
-            if(!leftSideThruster.isPlaying) {
-                leftSideThruster.Play();
-            }
+        else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) {
+            RotateRight();
         }
         else {
-            leftSideThruster.Stop();
-            rightSideThruster.Stop();
+            StopRotation();
         }
     }
+
+    void RotateLeft() {
+        ApplyRotation(rotationThrust);
+        if(!rightSideThruster.isPlaying) {
+            rightSideThruster.Play();
+        }
+    }
+
+    void RotateRight() {
+        ApplyRotation(-rotationThrust);
+        if(!leftSideThruster.isPlaying) {
+            leftSideThruster.Play();
+        }
+    }
+
     void ApplyRotation(float rotationThisFrame) {
         rBody.freezeRotation = true;
         transform.Rotate(Vector3.forward * rotationThisFrame * Time.deltaTime);
         rBody.freezeRotation = false;
+    }
+
+    void StopRotation() {
+        leftSideThruster.Stop();
+        rightSideThruster.Stop();
+    }
+
+    void applyThrust() {
+        rBody.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
+        if(!audioSource.isPlaying) {
+            audioSource.PlayOneShot(mainEngine);
+        }
+        if(!mainThrusters.isPlaying) {
+            mainThrusters.Play();
+        }
+    }
+
+    void killThrust() {
+        audioSource.Stop();
+        mainThrusters.Stop();
     }
 }

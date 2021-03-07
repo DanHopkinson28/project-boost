@@ -10,20 +10,42 @@ public class CollisionHandler : MonoBehaviour {
     [SerializeField] ParticleSystem crashParticle;
 
     AudioSource audioSource;
+    Rigidbody rBody;
     int currentSceneIndex;
     int nextSceneIndex;
 
     bool isTransitioning;
+    bool debugMode;
 
     void Start() {
         currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         nextSceneIndex = currentSceneIndex + 1;
         audioSource = GetComponent<AudioSource>();
         isTransitioning = false;
+        debugMode = false;
+    }
+
+    void Update() {
+        DebugCollision();
+    }
+
+    void DebugCollision() {
+        if (Input.GetKeyDown(KeyCode.C)) {
+            DebugMode();
+        }
+        if (Input.GetKeyDown(KeyCode.L)) {
+            LoadNextLevel();
+            Debug.Log("Debug Mode Activated: Level Skipped");
+        }
+    }
+
+    void DebugMode() {
+        debugMode = !debugMode;
+        Debug.Log("Debug Mode = " + debugMode);
     }
 
     void OnCollisionEnter(Collision other) {
-        if (isTransitioning) {return;}
+        if (isTransitioning || debugMode) {return;}
         switch (other.gameObject.tag) {
             case "Launch Pad":
                 Debug.Log("Ready to Launch");
