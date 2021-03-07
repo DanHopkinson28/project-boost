@@ -2,13 +2,22 @@
 using UnityEngine.SceneManagement;
 
 public class CollisionHandler : MonoBehaviour {
+
+    int currentSceneIndex;
+    int nextSceneIndex;
+
+    void Start() {
+        currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        nextSceneIndex = currentSceneIndex + 1;
+    }
+
     void OnCollisionEnter(Collision other) {
         switch (other.gameObject.tag) {
             case "Launch Pad":
                 Debug.Log("Ready to Launch");
                 break;
             case "Landing Pad":
-                Debug.Log("Level complete");
+                LoadNextLevel();
                 break;
             case "Fuel Pickup":
                 Debug.Log("Refuelled");
@@ -20,7 +29,18 @@ public class CollisionHandler : MonoBehaviour {
     }
 
     void ReloadLevel() {
-        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex; 
         SceneManager.LoadScene(currentSceneIndex);
+    }
+
+    void LoadNextLevel() {
+        if (nextSceneIndex == SceneManager.sceneCountInBuildSettings) {
+            RestartGame();    
+        } else {
+            SceneManager.LoadScene(nextSceneIndex);
+        }
+    }
+
+    void RestartGame() {
+        SceneManager.LoadScene(0);   
     }
 }
