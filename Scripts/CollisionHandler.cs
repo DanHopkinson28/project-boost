@@ -48,13 +48,9 @@ public class CollisionHandler : MonoBehaviour {
         if (isTransitioning || debugMode) {return;}
         switch (other.gameObject.tag) {
             case "Launch Pad":
-                Debug.Log("Ready to Launch");
                 break;
             case "Landing Pad":
                 StartSuccessSequence();
-                break;
-            case "Fuel Pickup":
-                Debug.Log("Refuelled");
                 break;
             default:
                 StartCrashSequence();
