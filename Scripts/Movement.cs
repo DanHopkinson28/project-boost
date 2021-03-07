@@ -4,11 +4,17 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour {
 
-    float mainThrust = 1500f;
-    float rotationThrust = 200f;
     [SerializeField] AudioClip mainEngine;
+    [SerializeField] ParticleSystem mainThrusters;
+    [SerializeField] ParticleSystem leftSideThruster;
+    [SerializeField] ParticleSystem rightSideThruster;
+
+    
     AudioSource audioSource;
     Rigidbody rBody;
+
+    float mainThrust = 1500f;
+    float rotationThrust = 200f;
 
     void Start() {
         rBody = GetComponent<Rigidbody>();
@@ -28,17 +34,31 @@ public class Movement : MonoBehaviour {
             if(!audioSource.isPlaying) {
                 audioSource.PlayOneShot(mainEngine);
             }
+            if(!mainThrusters.isPlaying) {
+                mainThrusters.Play();
+            }
         }
         else {
             audioSource.Stop();
+            mainThrusters.Stop();
         }
     }
     void ProcessRotation() {
         if (Input.GetKey(KeyCode.LeftArrow)) {
             ApplyRotation(rotationThrust);
+            if(!rightSideThruster.isPlaying) {
+                rightSideThruster.Play();
+            }
         }
         else if (Input.GetKey(KeyCode.RightArrow)) {
             ApplyRotation(-rotationThrust);
+            if(!leftSideThruster.isPlaying) {
+                leftSideThruster.Play();
+            }
+        }
+        else {
+            leftSideThruster.Stop();
+            rightSideThruster.Stop();
         }
     }
     void ApplyRotation(float rotationThisFrame) {
