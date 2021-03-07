@@ -5,6 +5,7 @@ public class CollisionHandler : MonoBehaviour {
 
     int currentSceneIndex;
     int nextSceneIndex;
+    [SerializeField] float loadDelay;
 
     void Start() {
         currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
@@ -17,15 +18,27 @@ public class CollisionHandler : MonoBehaviour {
                 Debug.Log("Ready to Launch");
                 break;
             case "Landing Pad":
-                LoadNextLevel();
+                StartSuccessSequence();
                 break;
             case "Fuel Pickup":
                 Debug.Log("Refuelled");
                 break;
             default:
-                ReloadLevel();
+                StartCrashSequence();
                 break;
         }
+    }
+
+    void StartSuccessSequence() {
+        GetComponent<Movement>().enabled = false;
+        Invoke("LoadNextLevel", loadDelay);
+    }
+
+    void StartCrashSequence() {
+        // Todo: Add SFX upon crash
+        // Todo: Add Particle effect upon crash
+        GetComponent<Movement>().enabled = false;
+        Invoke("ReloadLevel", loadDelay);
     }
 
     void ReloadLevel() {
