@@ -224,6 +224,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cbc683b818728a4d83de137191153cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainEngine: {fileID: 8300000, guid: 51215ad70c8fa4c45a1dea93f36e8445, type: 3}
 --- !u!114 &8451503561618974140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -237,3 +238,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadDelay: 2
+  victorySound: {fileID: 8300000, guid: a39c20607351e5047bceebefb1e9b5eb, type: 3}
+  crashExplosion: {fileID: 8300000, guid: ba68ba61fbc4322418bda6ab6048c134, type: 3}

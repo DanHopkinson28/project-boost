@@ -6,6 +6,7 @@ public class Movement : MonoBehaviour {
 
     float mainThrust = 1500f;
     float rotationThrust = 200f;
+    [SerializeField] AudioClip mainEngine;
     AudioSource audioSource;
     Rigidbody rBody;
 
@@ -25,7 +26,7 @@ public class Movement : MonoBehaviour {
         if (Input.GetKey(KeyCode.Space)) {
             rBody.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
             if(!audioSource.isPlaying) {
-                audioSource.Play();
+                audioSource.PlayOneShot(mainEngine);
             }
         }
         else {

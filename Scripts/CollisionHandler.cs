@@ -3,16 +3,25 @@ using UnityEngine.SceneManagement;
 
 public class CollisionHandler : MonoBehaviour {
 
+    [SerializeField] float loadDelay;
+    [SerializeField] AudioClip victorySound;
+    [SerializeField] AudioClip crashExplosion;
+
+    AudioSource audioSource;
     int currentSceneIndex;
     int nextSceneIndex;
-    [SerializeField] float loadDelay;
+
+    bool isTransitioning;
 
     void Start() {
         currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         nextSceneIndex = currentSceneIndex + 1;
+        audioSource = GetComponent<AudioSource>();
+        isTransitioning = false;
     }
 
     void OnCollisionEnter(Collision other) {
+        if (isTransitioning) {return;}
         switch (other.gameObject.tag) {
             case "Launch Pad":
                 Debug.Log("Ready to Launch");
@@ -30,13 +39,18 @@ public class CollisionHandler : MonoBehaviour {
     }
 
     void StartSuccessSequence() {
+        isTransitioning = true;
+        audioSource.Stop();
+        audioSource.PlayOneShot(victorySound);
         GetComponent<Movement>().enabled = false;
         Invoke("LoadNextLevel", loadDelay);
     }
 
     void StartCrashSequence() {
-        // Todo: Add SFX upon crash
         // Todo: Add Particle effect upon crash
+        isTransitioning = true;
+        audioSource.Stop();
+        audioSource.PlayOneShot(crashExplosion);
         GetComponent<Movement>().enabled = false;
         Invoke("ReloadLevel", loadDelay);
     }
